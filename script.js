@@ -27,7 +27,27 @@ let initCanvas = () =>{
     }
 
     let enemies = [
-        new enemyTemplate({id:'enemy3', x:350, y:50, w:80, h:30})
+        new enemyTemplate({id:'enemy1', x:100, y:-20, w:50, h:30}),
+        new enemyTemplate({id:'enemy2', x:225, y:-20, w:50, h:30}),
+        new enemyTemplate({id:'enemy3', x:350, y:-20, w:80, h:30}),
+        new enemyTemplate({id:'enemy4', x:100, y:-70, w:80, h:30}),
+        new enemyTemplate({id:'enemy5', x:225, y:-70, w:50, h:30}),
+        new enemyTemplate({id:'enemy6', x:350, y:-70, w:50, h:30}),
+        new enemyTemplate({id:'enemy7', x:475, y:-70, w:50, h:30}),
+        new enemyTemplate({id:'enemy8', x:600, y:-70, w:80, h:30}),
+        new enemyTemplate({id:'enemy9', x:475, y:-20, w:50, h:30}),
+        new enemyTemplate({id:'enemy10', x:600, y:-20, w:50, h:30}),
+        // second group of enemys
+        new enemyTemplate({id:'enemy11', x:100, y:-220, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy12', x:225, y:-220, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy13', x:350, y:-220, w:80, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy14', x:100, y:-270, w:80, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy15', x:225, y:-270, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy16', x:350, y:-270, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy17', x:475, y:-270, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy18', x:600, y:-270, w:80, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy19', x:475, y:-200, w:50, h:30, image: enemiespic2 }),
+        new enemyTemplate({id:'enemy20', x:600, y:-200, w:50, h:30, image: enemiespic2 }),
     ];
 
     let renderEnemies = function(enemyList){
@@ -80,6 +100,12 @@ let initCanvas = () =>{
                     this.misiles.splice(i, 1);
                 }
             }
+            if(enemies.length === 0){
+                clearInterval(animateInterval);
+                tx.fillStyle = 'yellow';
+                tx.font = this.gameStatus.font;
+                tx.fillText('you win!', cW*.5 -80, 50);
+            }
         }
         this.hitDetect = function(m , mi){
             for(let i = 0; i < enemies.length;i++){
@@ -96,6 +122,11 @@ let initCanvas = () =>{
             if(enemy.y > 550){
                 this.gameStatus.over = true;
                 this.gameStatus.message = 'Enemy(s) have passed!';
+            }
+            if((enemy.y < this.y +25 && enemy.y > this.y -25)&&
+            (enemy.x < this.x + 45 && enemy.x > this.x - 45)){
+                this.gameStatus.over = true;
+                this.gameStatus.message = 'you died!';
             }
             if(this.gameStatus.over === true){
                 clearInterval(animateInterval);
@@ -273,6 +304,16 @@ let initCanvas = () =>{
     });
     right.addEventListener('mouseup',(e)=>{
         launcher.direccion = '';
+    });
+
+    //fire
+    fire.addEventListener('mousedown',(e)=>{
+        launcher.misiles.push({
+            x: launcher.x + launcher.w * .5,
+            y: launcher.y,
+            w: 3,
+            h: 10
+        });
     });
 
     document.addEventListener('keydown',(e)=>{
