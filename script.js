@@ -63,6 +63,15 @@ let initCanvas = () =>{
             tx.fillStyle = this.bg;
             tx.drawImage(backgroundImage, 10,10);
             tx.drawImage(naveImage, this.x, this.y, 100, 90);
+
+            for(let i=0;i<this.misiles.length;i++){
+                let m = this.misiles[i];
+                tx.fillRect(m.x, m.y -= 5, m.w, m.h);
+
+                if(m.y <= 0){
+                    this.misiles.splice(i, 1);
+                }
+            }
         }
     }
 
@@ -73,6 +82,10 @@ let initCanvas = () =>{
         renderEnemies(enemies);
     }
     let animateInterval = setInterval(animate, 6);
+
+    let left = document.getElementById('left');
+    let fire = document.getElementById('fire');
+    let right = document.getElementById('right');
     //--------------------------------------------------------------
     //left
     document.addEventListener('keydown', function(e){
@@ -208,12 +221,38 @@ let initCanvas = () =>{
         });
 
 //--------------------------------------------------------------------
-    document.addEventListener('keyup', function(e){
+    document.addEventListener('keydown', function(e){
         if(e.keyCode === 80){
             location.reload();
         }
     });
+
+    //lft
+    left.addEventListener('mousedown',(e)=>{
+        launcher.direccion = 'left';
+    });
+    left.addEventListener('mouseup',(e)=>{
+        launcher.direccion = '';
+    });
     
+    //right
+    right.addEventListener('mousedown',(e)=>{
+        launcher.direccion = 'right';
+    });
+    right.addEventListener('mouseup',(e)=>{
+        launcher.direccion = '';
+    });
+
+    document.addEventListener('keydown',(e)=>{
+        if(e.keyCode === 32){
+            launcher.misiles.push({
+                x: launcher.x + launcher.w * .5,
+                y: launcher.y,
+                w: 3,
+                h: 10
+            });
+        }
+    });
 }
 window.addEventListener('load',(e)=>{
     initCanvas();
