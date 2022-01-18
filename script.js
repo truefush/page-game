@@ -35,6 +35,7 @@ let initCanvas = () =>{
         for(let i=0; i < enemyList.length; i++){
             let enemy = enemyList[i];
             tx.drawImage(enemy.image, enemy.x, enemy.y += .5, enemy.w, enemy.h);
+            launcher.hitDetectLowerlevel(enemy);
         }
     }
 
@@ -46,6 +47,13 @@ let initCanvas = () =>{
         this.direction,
         this.bg = 'white',
         this.misiles = [];
+
+        this.gameStatus = {
+            over: false,
+            message: '',
+            fillStyle: 'red',
+            font:'italic bold 36px Arial, sans-serif',
+        }
 
         this.render = function(){
             if(this.direccion === 'left'){
@@ -67,10 +75,34 @@ let initCanvas = () =>{
             for(let i=0;i<this.misiles.length;i++){
                 let m = this.misiles[i];
                 tx.fillRect(m.x, m.y -= 5, m.w, m.h);
-
+                this.hitDetect(m, i); 
                 if(m.y <= 0){
                     this.misiles.splice(i, 1);
                 }
+            }
+        }
+        this.hitDetect = function(m , mi){
+            for(let i = 0; i < enemies.length;i++){
+                let en = enemies[i];
+
+                if(m.x <= en.x + en.w && m.x + m.w >= en.x &&
+                    m.y >= en.y && m.y <= en.y + en.h){
+                    enemies.splice(i, 1);
+                    document.querySelector('.barr').innerHTML = 'Destroyed '+ en.id;
+                }
+            }
+        }
+        this.hitDetectLowerlevel = function(enemy){
+            if(enemy.y > 550){
+                this.gameStatus.over = true;
+                this.gameStatus.message = 'Enemy(s) have passed!';
+            }
+            if(this.gameStatus.over === true){
+                clearInterval(animateInterval);
+                tx.fillStyle = this.gameStatus.fillStyle;
+                tx.font = this.gameStatus.font;
+
+                tx.fillText(this.gameStatus.message, cW* .5 -80, 50);
             }
         }
     }
